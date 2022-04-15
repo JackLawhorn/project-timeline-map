@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/project-timeline-map/static/css/main.b4b03150.css",
+    "main.js": "/project-timeline-map/static/js/main.45b464d8.js",
+    "static/js/787.b821db58.chunk.js": "/project-timeline-map/static/js/787.b821db58.chunk.js",
+    "index.html": "/project-timeline-map/index.html",
+    "main.b4b03150.css.map": "/project-timeline-map/static/css/main.b4b03150.css.map",
+    "main.45b464d8.js.map": "/project-timeline-map/static/js/main.45b464d8.js.map",
+    "787.b821db58.chunk.js.map": "/project-timeline-map/static/js/787.b821db58.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b4b03150.css",
+    "static/js/main.45b464d8.js"
+  ]
+}
