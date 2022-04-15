@@ -62,6 +62,7 @@
 *
 */
 .node-label__controls {
+  display: block;
   height: 100%;
   aspect-ratio: 1/1;
   pointer-events: none;
