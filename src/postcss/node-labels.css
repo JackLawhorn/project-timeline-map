@@ -1,0 +1,84 @@
+/*
+*
+* Node label elements used throughout the interface
+*
+*/
+.node-label {
+  display: grid;
+  grid-template-columns: -webkit-min-content auto 1fr;
+  grid-template-columns: min-content auto 1fr;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  /*
+  *
+  * Difference between standalone node labels and those used in other components
+  *
+  */
+  &.glass {
+    position: absolute;
+    transform: translate(-50%, calc(-100% - 6tick));
+  }
+  &:not(.glass) {
+    width: 100%;
+  }
+
+  /*
+  *
+  * Node label elements used for drag preview label
+  *
+  */
+  &.new-node-label {
+    display: block;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    padding: 2tick 4tick;
+  }
+
+  &__icon {
+    height: 3.375em;
+    aspect-ratio: 1 / 1;
+  }
+
+  &__title {
+    padding: 2tick 4tick 2tick 0;
+  }
+  &__type {
+    margin-bottom: 2tick;
+    font-size: 0.75em;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    opacity: 0.85;
+  }
+}
+
+/*
+*
+* SVG used for radial menu
+*
+*/
+.node-label__controls {
+  height: 100%;
+  aspect-ratio: 1/1;
+  pointer-events: none;
+
+  & .arrow {
+    visibility: hidden;
+  }
+
+  & .quadrant {
+    fill: none;
+    pointer-events: all;
+
+    &:hover + .arrow {
+      visibility: visible;
+    }
+  }
+}
+.node-label:not(:hover):not(:focus-within) .node-label__controls {
+  visibility: hidden;
+}

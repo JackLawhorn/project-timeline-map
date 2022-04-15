@@ -1,0 +1,171 @@
+/* 
+*
+* Defining variables
+*
+*/
+#root {
+  /* Custom units */
+  --unit-tick: 0.25em;
+
+  /* Custom color props */
+  --more-dark: rgba(0, 0, 0, 0.5);
+  --dark: rgba(0, 0, 0, 0.25);
+  --less-dark: rgba(0, 0, 0, 0.125);
+
+  --more-light: rgba(255, 255, 255, 0.5);
+  --light: rgba(255, 255, 255, 0.25);
+  --less-light: rgba(255, 255, 255, 0.125);
+}
+
+/* 
+*
+* Style rests
+*
+*/
+*,
+*::before,
+*::after,
+*::-webkit-scrollbar-thumb {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 14pt;
+  line-height: 1em;
+  scroll-behavior: smooth;
+
+  background-blend-mode: darken;
+}
+
+/* 
+*
+* Base App stylings
+*
+*/
+body,
+#root,
+.App {
+  width: 100vw;
+  height: 100vh;
+}
+
+.App {
+  display: grid;
+  grid-template-rows: auto 1fr;
+
+  background: linear-gradient(to bottom right, #8a2387, #e94057, #f27121);
+  background-size: 200% 200%;
+  -webkit-animation: background-gradient 15s ease infinite;
+  animation: background-gradient 15s ease infinite;
+  padding: 0;
+  margin: 0;
+  min-width: 550px;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+/* 
+*
+* Scrollbar stylings
+*
+*/
+::-webkit-scrollbar {
+  width: 6tick;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--light);
+  border-radius: 100vh;
+  background-clip: padding-box;
+  border: 2tick solid transparent;
+  -webkit-transition: 2s ease;
+  transition: 2s ease;
+}
+::-webkit-scrollbar-corner {
+  background: none;
+}
+
+/* 
+*
+* Base tag stylings
+*
+*/
+kbd {
+  padding: 1tick 2tick;
+  border-radius: 2tick;
+}
+
+/* 
+*
+* Styling SVG Def elements
+*
+*/
+svg #arrow path {
+  stroke-width: 1tick;
+}
+
+/* 
+*
+* Keyframe animations
+*
+*/
+@-webkit-keyframes background-gradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+@keyframes background-gradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@-webkit-keyframes ripple {
+  to {
+    --size: 12tick;
+    --offset: -6tick;
+    width: var(--size);
+    height: var(--size);
+    transform: translate(var(--offset), var(--offset));
+    stroke-width: 0.5tick;
+    opacity: 0;
+  }
+}
+
+@keyframes ripple {
+  to {
+    --size: 12tick;
+    --offset: -6tick;
+    width: var(--size);
+    height: var(--size);
+    transform: translate(var(--offset), var(--offset));
+    stroke-width: 0.5tick;
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes stroke-move {
+  to {
+    stroke-dashoffset: -100%;
+  }
+}
+
+@keyframes stroke-move {
+  to {
+    stroke-dashoffset: -100%;
+  }
+}

@@ -1,0 +1,77 @@
+/* 
+*
+* Standard, glass-like look with blurred backdrop
+*
+*/
+.glass {
+  color: white;
+  text-shadow: 0 0 1tick var(--more-dark);
+
+  background-color: var(--dark);
+  border: 0.5tick solid var(--light);
+  border-radius: 2tick;
+  box-shadow: 0 1tick 1tick var(--less-dark);
+
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  background-blend-mode: darken;
+
+  &:is(:hover, :focus-within) {
+    z-index: 1000;
+  }
+
+  &:focus-within {
+    border-color: white;
+  }
+
+  &__white {
+    background-color: var(--light);
+  }
+}
+
+/* 
+*
+* Styling for buttons within .glass elements
+*
+*/
+.glass .glass-button {
+  padding: 2tick 4tick;
+  color: inherit;
+  background: none;
+  border: none;
+
+  cursor: pointer;
+
+  &,
+  & svg {
+    transition: 0.1s ease;
+  }
+
+  &:is(:hover, :focus-within):not(:active) {
+    background: var(--less-dark);
+
+    &.fade-to-right {
+      background: linear-gradient(to right, var(--less-dark), transparent);
+    }
+    &.fade-to-left {
+      background: linear-gradient(to left, var(--less-dark), transparent);
+    }
+
+    & svg {
+      transform: scale(1.1);
+    }
+  }
+
+  & * {
+    pointer-events: none;
+  }
+
+  & > svg {
+    &:first-child:not(:last-child) {
+      margin-right: 1ch;
+    }
+    &:last-child:not(:first-child) {
+      margin-left: 1ch;
+    }
+  }
+}

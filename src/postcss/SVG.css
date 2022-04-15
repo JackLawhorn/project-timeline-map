@@ -1,0 +1,133 @@
+/*
+*
+* Styling SVG elements
+*
+*/
+:not(.glass-button) > svg:not(.node-label__controls) {
+  overflow: visible;
+
+  &.canvas {
+    display: block;
+    width: 100%;
+    height: -webkit-fill-available;
+    margin: 8tick 0;
+    overflow: visible;
+
+    -webkit-filter: drop-shadow(0 0 1tick var(--less-dark));
+    filter: drop-shadow(0 0 1tick var(--less-dark));
+
+    & .event-node:hover {
+      --size: 6tick;
+      --offset: -3tick;
+    }
+  }
+
+  & * {
+    stroke: white;
+    stroke-width: 1.5tick;
+  }
+
+  & path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+/*
+*
+* Style nodes and related elements
+*
+*/
+@property --size {
+  syntax: '<length>';
+  initial-value: 4tick;
+  inherits: false;
+}
+@property --offset {
+  syntax: '<length>';
+  initial-value: -2tick;
+  inherits: false;
+}
+svg :is(.event-node, .selected-outline) {
+  --size: 4tick;
+  --offset: -2tick;
+  width: var(--size);
+  height: var(--size);
+  transform: translate(var(--offset), var(--offset));
+
+  transition-property: width, height, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+
+  &.event-node {
+    fill: #e94057;
+    cursor: pointer;
+  }
+
+  &.selected-outline {
+    fill: none;
+    -webkit-animation: ripple 2s ease infinite;
+    animation: ripple 2s ease infinite;
+    pointer-events: none;
+  }
+
+  &[nodeshape='circle'] {
+    rx: 50%;
+    ry: 50%;
+  }
+}
+
+/*
+*
+* Styling elements drawn as part of a drag preview
+*
+*/
+svg.canvas .preview-layer {
+  opacity: 0.25;
+  pointer-events: none;
+  user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  & :is(rect, path) {
+    stroke: black;
+  }
+
+  & path {
+    stroke-dasharray: 0 3tick;
+    -webkit-animation: stroke-move 2s linear infinite;
+    animation: stroke-move 30s linear infinite;
+  }
+}
+
+/*
+*
+* Styling initial layout ("Start Timeline" button)
+*
+*/
+.canvas > foreignObject.init-layout {
+  position: relative;
+
+  & .start-button-container {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > .start-button {
+      padding: 2tick 4tick;
+      cursor: pointer;
+      transition: 0.1s ease;
+
+      &:is(:hover, :focus):not(:active) {
+        border-color: white;
+        padding: 3tick 6tick;
+      }
+    }
+  }
+}
