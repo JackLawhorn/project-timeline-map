@@ -92,9 +92,17 @@ body,
 * Base tag stylings
 *
 */
+:is(ul, summary) {
+  list-style: none;
+
+  &::marker {
+    content: '';
+    display: none;
+  }
+}
 kbd {
-  padding: 1tick 2tick;
-  border-radius: 2tick;
+  padding: 0.5tick 1tick;
+  border-radius: 1tick;
 }
 
 /* 

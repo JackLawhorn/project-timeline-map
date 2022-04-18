@@ -1,5 +1,7 @@
 import React from 'react';
-import NodeLabel from '../NodeLabel/NodeLabel';
+import { RiSearchLine } from 'react-icons/ri';
+import TextInput from '../input/TextInput';
+import NodesList from './NodesList';
 
 export default class ListPanel extends React.Component {
   constructor(props) {
@@ -7,12 +9,11 @@ export default class ListPanel extends React.Component {
 
     this.state = {
       CTRL: props.CTRL,
+      searchQuery: '',
     };
 
     this.handleSelect = props.handleSelect;
     this.handleHover = props.handleHover;
-    this.toggleListPanel = props.toggleListPanel;
-    this.handleSelect = this.handleSelect.bind(this);
   }
 
   componentDidMount() {}
@@ -23,37 +24,40 @@ export default class ListPanel extends React.Component {
     };
   }
 
-  handleSelect(nodeLabel) {
-    this.handleSelect(nodeLabel);
-  }
-
   render() {
     const nodesList = this.state.CTRL.toArray(),
-      { handleSelect, handleHover, toggleListPanel } = this;
+      { handleSelect, handleHover } = this;
+
+    const searchFilter = node =>
+      node.id.toLowerCase().includes(this.state.searchQuery.toLowerCase()) ||
+      node.label.toLowerCase().includes(this.state.searchQuery.toLowerCase()) ||
+      node.info.toLowerCase().includes(this.state.searchQuery.toLowerCase());
 
     return (
-      <ul className='list-panel panel glass glass__white panel__list'>
-        {nodesList.map((node, i) => (
-          <li
-            key={i}
-            className='list-panel-item'
-            onClick={() => {
-              handleSelect(node.id);
+      <div open className='list-panel panel glass glass__white'>
+        <label className='panel__header glass-input-label glass-button' htmlFor='search__inner'>
+          <RiSearchLine />
+          <TextInput
+            id={'search'}
+            htmlFor='search__inner'
+            initialValue=''
+            placeholder='Type to search...'
+            layout='single'
+            delay={0}
+            onChange={e => {
+              const value = e.target.value;
+              this.setState({
+                searchQuery: value,
+              });
             }}
-            onMouseOver={() => {
-              handleHover(node.id);
-            }}
-            onMouseLeave={() => {
-              handleHover();
-            }}
-          >
-            <NodeLabel node={node} />
-          </li>
-        ))}
-        {nodesList.length === 0 && (
-          <li className='list-panel-item empty'>Click "Start Timeline" to add an Origin node.</li>
-        )}
-      </ul>
+          />
+        </label>
+        <NodesList
+          nodesList={nodesList.filter(searchFilter)}
+          handleSelect={handleSelect}
+          handleHover={handleHover}
+        />
+      </div>
     );
   }
 }

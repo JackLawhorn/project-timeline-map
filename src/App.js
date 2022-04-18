@@ -1,32 +1,31 @@
 import './style.css';
 import React from 'react';
-import { HiOutlineViewList } from 'react-icons/hi';
-import { VscChromeClose } from 'react-icons/vsc';
+
+import { RiLayoutLeftLine, RiCloseLine, RiInformationLine } from 'react-icons/ri';
 
 import TreeMap from './components/TreeMap';
 import ListPanel from './components/panels/ListPanel';
 import NodePanel from './components/panels/NodePanel';
+import ControlsPanel from './components/panels/ControlsPanel';
 
 import TreeController from './data-classes/TreeController';
-import TreeNode from './data-classes/TreeNode';
-import ControlsPanel from './components/panels/ControlsPanel';
+import HistoryPanel from './components/panels/HistoryPanel';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
 
     const CTRL = new TreeController();
-    // CTRL.addOrigin();
-    // const originID = CTRL.CTRL._ID;
-    // CTRL.appendChild(originID, new TreeNode('A', CTRL));
-    // CTRL.appendChild(originID, new TreeNode('B', CTRL));
-    // CTRL.appendChild(originID, new TreeNode('C', CTRL));
-    // console.log(CTRL);
 
     this.state = {
       CTRL: CTRL,
+      history: [{ updateLabel: 'Initial state', CTRL: CTRL }],
+      historyIndex: 0,
+
       selected: undefined,
       hovered: undefined,
+
+      modal: undefined,
 
       scrollPosn: 0,
       zoom: 1,
@@ -44,6 +43,9 @@ export default class App extends React.Component {
     this.handleDragToScroll = this.handleDragToScroll.bind(this);
 
     this.toggleListPanel = this.toggleListPanel.bind(this);
+    this.openModal = this.openModal.bind(this);
+
+    this.restoreState = this.restoreState.bind(this);
 
     this.handleClearState = this.handleClearState.bind(this);
   }
@@ -64,12 +66,37 @@ export default class App extends React.Component {
     document.removeEventListener('keydown', handleDeselect);
   }
 
-  updateData(updatedController, newSelected) {
-    newSelected = newSelected ?? this.state.selected;
+  updateData(
+    updatedController,
+    newSelected = this.state.selected,
+    updateLabel = 'Untitled update'
+  ) {
     this.setState({
       CTRL: updatedController,
+      history: [
+        { updateLabel: updateLabel, CTRL: updatedController },
+        ...this.state.history.slice(this.state.historyIndex),
+      ],
+      historyIndex: 0,
       selected: newSelected,
     });
+  }
+
+  openModal(component) {
+    this.setState({
+      modal: component,
+    });
+  }
+
+  restoreState(i = 0) {
+    const { CTRL } = this.state.history[i];
+    this.setState(
+      {
+        CTRL: CTRL,
+        historyIndex: i,
+      },
+      console.log(this.state.CTRL.toArray().length)
+    );
   }
 
   handleSelect(nodeID) {
@@ -133,10 +160,15 @@ export default class App extends React.Component {
 
   handleClearState() {
     const oldZoom = this.state.zoom;
-    this.setState({
-      scrollPosn: 0,
-      zoom: oldZoom === 1 ? 2 : 1,
-    });
+    this.setState(
+      {
+        scrollPosn: 0,
+        zoom: oldZoom === 1 ? 2 : 1,
+      },
+      () => {
+        this.openModal();
+      }
+    );
   }
 
   toggleListPanel() {
@@ -148,7 +180,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { CTRL, selected, hovered } = this.state,
+    const { CTRL, selected, hovered, modal } = this.state,
       scrollAndZoom = {
         scrollPosn: this.state.scrollPosn,
         zoom: this.state.zoom,
@@ -163,65 +195,75 @@ export default class App extends React.Component {
       } = this;
 
     return (
-      <div className='App' onWheel={handleScroll}>
-        <this.NavBarLayer />
-        <div className='main-content'>
-          <TreeMap
-            CTRL={CTRL}
-            selected={selected}
-            hovered={hovered}
-            scrollAndZoom={scrollAndZoom}
-            updateData={updateData}
-            handleSelect={handleSelect}
-            handleHover={handleHover}
-            /*
-             * Additional props needed for Controls
-             */
-            handleDragToScroll={handleDragToScroll}
-            handleClearState={handleClearState}
-          />
-          <this.LeftTrayLayer />
-          <this.RightTrayLayer />
+      <>
+        {modal !== undefined && modal}
+        <div className='App' onWheel={handleScroll}>
+          <this.NavBarLayer />
+          <div className='main-content'>
+            <TreeMap
+              CTRL={CTRL}
+              selected={selected}
+              hovered={hovered}
+              scrollAndZoom={scrollAndZoom}
+              updateData={updateData}
+              handleSelect={handleSelect}
+              handleHover={handleHover}
+              handleDragToScroll={handleDragToScroll}
+              handleClearState={handleClearState}
+            />
+            <this.LeftTrayLayer />
+            <this.RightTrayLayer />
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   // Top nav bar of the page
   NavBarLayer = () => {
     const toggleListPanel = this.toggleListPanel,
-      button = document.querySelector('.show-list-panel-button');
+      openModal = this.openModal;
 
     return (
       <div className='nav-bar glass'>
         <button
           className='glass-button fade-to-right show-list-panel-button'
-          onClick={() => {
-            this.setState({
-              showListPanel: true,
-            });
-          }}
+          onClick={toggleListPanel}
           onBlur={() => {
             setTimeout(() => {
-              toggleListPanel();
+              this.setState({
+                // showListPanel: false,
+              });
             }, 0);
           }}
         >
           {this.state.showListPanel ? (
             <>
-              <VscChromeClose />
+              <RiCloseLine />
               <span>Hide menu</span>
             </>
           ) : (
             <>
-              <HiOutlineViewList />
+              <RiLayoutLeftLine />
               <span>Show menu</span>
             </>
           )}
         </button>
         <div>Project Storyline</div>
-        <button className='glass-button fade-to-left'>
-          <span>Some button</span>
+        <button
+          className='glass-button fade-to-left'
+          onClick={() => {
+            openModal(
+              <ControlsPanel
+                closeModal={() => {
+                  openModal(undefined);
+                }}
+              />
+            );
+          }}
+        >
+          <RiInformationLine />
+          <span>Help</span>
         </button>
       </div>
     );
@@ -229,8 +271,8 @@ export default class App extends React.Component {
 
   // Left tray containing ListPanel
   LeftTrayLayer = () => {
-    const { CTRL, showListPanel } = this.state,
-      { handleSelect, handleHover, toggleListPanel } = this;
+    const { CTRL, history, historyIndex, showListPanel } = this.state,
+      { handleSelect, handleHover, toggleListPanel, restoreState } = this;
 
     return (
       <div className='main-content__tray left' open={showListPanel ? 'open' : undefined}>
@@ -240,17 +282,32 @@ export default class App extends React.Component {
           handleSelect={handleSelect}
           handleHover={handleHover}
         />
+        <HistoryPanel
+          updatesList={history}
+          historyIndex={historyIndex}
+          restoreState={restoreState}
+        />
       </div>
     );
   };
 
   // Right tray containing NodePanel
   RightTrayLayer = () => {
-    const { CTRL, selected } = this.state;
+    const { CTRL, selected } = this.state,
+      { updateData, handleSelect, handleHover } = this;
+    const selectedNode = CTRL?.searchByID(selected);
 
     return (
       <div className='main-content__tray right' open={selected ? 'open' : undefined}>
-        {selected && <NodePanel node={CTRL?.searchByID(selected)} />}
+        {selected && (
+          <NodePanel
+            CTRL={CTRL}
+            node={selectedNode}
+            updateData={updateData}
+            handleSelect={handleSelect}
+            handleHover={handleHover}
+          />
+        )}
       </div>
     );
   };

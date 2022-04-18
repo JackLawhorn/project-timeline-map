@@ -24,6 +24,7 @@ export default class TreeMap extends React.Component {
     this.handleHover = props.handleHover;
     this.handleDragToScroll = props.handleDragToScroll;
     this.clearState = props.clearState;
+    this.updateData = props.updateData;
 
     this.handleDragNode = this.handleDragNode.bind(this);
     this.getNodeLabelControls = this.getNodeLabelControls.bind(this);
@@ -72,7 +73,6 @@ export default class TreeMap extends React.Component {
 
     const canvas = document.querySelector('svg.canvas');
     const style = canvas.currentStyle || window.getComputedStyle(canvas);
-    console.log(style.marginTop);
     const ht = parseInt(style.marginTop);
 
     const handleMouseMove = e => {
@@ -99,7 +99,7 @@ export default class TreeMap extends React.Component {
         () => {
           document.body.style = undefined;
           CTRL.appendChild(nodeID);
-          updateData(CTRL);
+          updateData(CTRL, undefined, `Added node #${nodeID}`);
         }
       );
     };
@@ -115,7 +115,7 @@ export default class TreeMap extends React.Component {
       () => {},
       () => {
         const newLeaf = new TreeNode(`${node.label === 'Origin' ? '' : node.label}A`, CTRL);
-        updateData(CTRL.appendChild(selected, newLeaf), newLeaf._ID);
+        updateData(CTRL.appendChild(selected, newLeaf), newLeaf._ID, `Added node #${newLeaf._ID}`);
       },
       () => {
         const newSplit = new TreeNode(`Split ${node.label}`, CTRL);
@@ -123,7 +123,11 @@ export default class TreeMap extends React.Component {
         const newLeaf2 = new TreeNode(`${node.label}B`, CTRL);
         CTRL.appendChild(newSplit._ID, newLeaf1);
         CTRL.appendChild(newSplit._ID, newLeaf2);
-        updateData(CTRL.appendChild(selected, newSplit), newSplit._ID);
+        updateData(
+          CTRL.appendChild(selected, newSplit),
+          newSplit._ID,
+          `Added node #${newSplit._ID}`
+        );
       },
       () => {},
     ];
@@ -160,7 +164,7 @@ export default class TreeMap extends React.Component {
                 <button
                   className='start-button glass'
                   onClick={() => {
-                    updateData(CTRL.addOrigin(), CTRL.root?.id);
+                    updateData(CTRL.addOrigin(), CTRL.root?.id, `Added root #${CTRL.root?.id}`);
                   }}
                 >
                   Start Timeline
@@ -250,7 +254,7 @@ export default class TreeMap extends React.Component {
   // Draw all overlays, including NodeLabels
   OverlayLayer = ({ renderedNodes, previewLayerElements }) => {
     const { CTRL, selected, hovered, hx } = this.state,
-      getNodeLabelControls = this.getNodeLabelControls;
+      { getNodeLabelControls } = this;
 
     return (
       <>
@@ -262,7 +266,7 @@ export default class TreeMap extends React.Component {
                 node={CTRL?.searchByID(node.id)}
                 standaloneContext={{
                   left: node.x,
-                  bottom: 100 * hx - node.y,
+                  top: node.y,
                 }}
                 controls={getNodeLabelControls(node)}
               />
@@ -279,7 +283,7 @@ export default class TreeMap extends React.Component {
                   className='node-label new-node-label glass'
                   style={{
                     left: el.x,
-                    bottom: 100 * hx - el.y + 25,
+                    top: el.y,
                   }}
                 >
                   {el.actionLabel(el.x, el.y)}

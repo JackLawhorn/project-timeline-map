@@ -17,7 +17,7 @@
   background-blend-mode: darken;
 
   &:is(:hover, :focus-within) {
-    z-index: 1000;
+    z-index: 999;
   }
 
   &:focus-within {
@@ -34,36 +34,41 @@
 * Styling for buttons within .glass elements
 *
 */
-.glass .glass-button {
-  padding: 2tick 4tick;
+.glass :is(.glass-button, .glass-input) {
+  --interact-highlight: var(--less-dark);
+
   color: inherit;
   background: none;
   border: none;
+  outline: none;
 
-  cursor: pointer;
+  &.glass-button:not(.node-label-container) {
+    padding: 2tick 4tick;
+    cursor: pointer;
+
+    & * {
+      pointer-events: none;
+    }
+  }
 
   &,
   & svg {
     transition: 0.1s ease;
   }
-
-  &:is(:hover, :focus-within):not(:active) {
-    background: var(--less-dark);
+  &.glass-button:is(:hover, :focus-within):not(:active),
+  &.glass-input .glass-input__inner:not([readonly]):is(:hover, :focus-within) {
+    background: var(--interact-highlight);
 
     &.fade-to-right {
-      background: linear-gradient(to right, var(--less-dark), transparent);
+      background: linear-gradient(to right, var(--interact-highlight), transparent);
     }
     &.fade-to-left {
-      background: linear-gradient(to left, var(--less-dark), transparent);
+      background: linear-gradient(to left, var(--interact-highlight), transparent);
     }
 
     & svg {
       transform: scale(1.1);
     }
-  }
-
-  & * {
-    pointer-events: none;
   }
 
   & > svg {
@@ -74,4 +79,7 @@
       margin-left: 1ch;
     }
   }
+}
+.glass__white :is(.glass-button, .glass-input) {
+  --interact-highlight: var(--less-light);
 }

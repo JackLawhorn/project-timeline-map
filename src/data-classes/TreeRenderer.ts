@@ -31,6 +31,7 @@ export default class TreeRenderer {
         label: keyMap.get(nodeID)?.label,
         x: coords.x ?? coordinateSystem({ x: 0, y: 50 }),
         y: coords.y ?? coordinateSystem({ x: 0, y: 50 }),
+        updateNode: keyMap.get(nodeID)?.updateNode,
       };
     });
 
@@ -210,11 +211,12 @@ export default class TreeRenderer {
    */
   private findParamsAtTreeNode(
     nodeID: string,
-    root: TreeNode = this._CTRL.root,
+    root: TreeNode | undefined = this._CTRL.root,
     nodeDepth: number = 0,
     breadthFloor: number = 0,
     breadthCeil: number = 100
   ): any {
+    if (root === undefined) return;
     if (root._ID === nodeID) return { nodeDepth, breadthFloor, breadthCeil };
     if (root.descendants.length === 0) return undefined;
 

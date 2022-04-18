@@ -1,0 +1,94 @@
+.glass-input {
+  position: relative;
+
+  & * {
+    line-height: 1.25em;
+    min-height: calc(1.25em + 2tick);
+  }
+
+  & [placeholder]::-webkit-input-placeholder {
+    color: inherit;
+    opacity: 0.5;
+  }
+
+  & [placeholder]::-moz-placeholder {
+    color: inherit;
+    opacity: 0.5;
+  }
+
+  & [placeholder]:-ms-input-placeholder {
+    color: inherit;
+    opacity: 0.5;
+  }
+
+  & [placeholder]::-ms-input-placeholder {
+    color: inherit;
+    opacity: 0.5;
+  }
+
+  & [placeholder]::placeholder {
+    color: inherit;
+    opacity: 0.5;
+  }
+
+  &__inner {
+    position: absolute;
+    inset: 0;
+
+    margin: 0;
+    color: inherit;
+    text-shadow: inherit;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+
+    &[readonly] {
+      cursor: unset;
+    }
+  }
+
+  &__inner-bounds {
+    visibility: hidden;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    user-drag: none;
+
+    white-space: pre-line;
+  }
+}
+
+.node-label .glass-input {
+  margin: -1tick -2tick;
+
+  & * {
+    max-height: 4.5em;
+    overflow: hidden;
+
+    padding: 1tick 2tick;
+    border-radius: 1tick;
+
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+  }
+
+  &__inner-bounds {
+    max-width: 24ch;
+  }
+}
+
+.node-panel > .glass-input * {
+  height: auto;
+  padding: 2tick;
+}
+
+.list-panel .panel__header .glass-input {
+  background: transparent !important;
+
+  & * {
+    min-height: calc(1.25em);
+  }
+}

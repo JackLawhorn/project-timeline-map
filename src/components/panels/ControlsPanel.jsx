@@ -5,34 +5,40 @@ export default class ControlsPanel extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.closeModal = props.closeModal;
+    this.handleClose = this.handleClose.bind(this);
   }
 
   componentDidMount() {}
 
-  static getDerivedStateFromProps(props) {}
+  handleClose(e) {
+    if (e.target.className === 'modal__container') this.closeModal();
+  }
 
   render() {
     return (
-      <details className='controls-panel panel glass'>
-        <summary className='controls-panel__title'>
-          <RiInformationLine />
-          <span>Some controls</span>
-        </summary>
-        <ul className='panel__list'>
-          <li className='controls-tip'>
-            <kbd className='glass'>Alt</kbd> + <kbd className='glass'>Scroll</kbd> – Zoom in/out
-          </li>
-          <li className='controls-tip'>
-            <kbd className='glass'>Shift</kbd> + <kbd className='glass'>Scroll</kbd> – Scroll
-            horizontally
-          </li>
-          <li className='controls-tip'>
-            <kbd className='glass'>Alt</kbd> + <kbd className='glass'>Drag</kbd> – Create new child
-            node
-          </li>
-        </ul>
-      </details>
+      <div className='modal__container' onClick={this.handleClose}>
+        <div className='controls-panel panel glass modal' open>
+          <div className='panel__header glass-button'>
+            <RiInformationLine />
+            <span>Keyboard Shortcuts</span>
+          </div>
+          <ul className='panel__list'>
+            <li className='panel__list__item glass-button'>
+              <kbd className='glass glass__white'>Alt</kbd> +{' '}
+              <kbd className='glass glass__white'>Scroll</kbd> – Zoom in/out
+            </li>
+            <li className='panel__list__item glass-button'>
+              <kbd className='glass glass__white'>Shift</kbd> +{' '}
+              <kbd className='glass glass__white'>Scroll</kbd> – Scroll horizontally
+            </li>
+            <li className='panel__list__item glass-button'>
+              <kbd className='glass glass__white'>Alt</kbd> +{' '}
+              <kbd className='glass glass__white'>Drag</kbd> – Create new child node
+            </li>
+          </ul>
+        </div>
+      </div>
     );
   }
 }

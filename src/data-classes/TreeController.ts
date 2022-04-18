@@ -2,14 +2,11 @@ import TreeNode from './TreeNode';
 import TreeRenderer from './TreeRenderer';
 
 export default class TreeController {
-  public root: TreeNode;
+  public root: TreeNode | undefined;
   private idMap: Map<string, TreeNode> = new Map<string, TreeNode>();
   private _RNDR: TreeRenderer = new TreeRenderer(this);
 
-  constructor(root: TreeNode) {
-    root && this.registerTreeNode(root);
-    this.root = root;
-  }
+  constructor() {}
 
   /**
    * @public
@@ -105,6 +102,27 @@ export default class TreeController {
     targetNode?.appendChild(newNode);
     return this;
   }
+
+  public updateNode(nodeID: string, updatedProperties: any): TreeController {
+    this.searchByID(nodeID)?.updateNode(updatedProperties);
+    return this;
+  }
+  public deleteNode(nodeID: string): TreeController {
+    const allNodes = this.toArray(),
+      deadNodes = this.searchByID(nodeID)?.toArray() ?? [];
+    const deadIDs = deadNodes.map(node => node._ID);
+
+    deadIDs.forEach(deadID => {
+      this.idMap.delete(deadID);
+    });
+    allNodes.forEach(node => {
+      node.descendants = [...node.descendants].filter(node => !deadIDs.includes(node._ID));
+    });
+    if (this.root?._ID === nodeID) this.root = undefined;
+
+    return this;
+  }
+
   public keys(): Array<string> {
     return Array.from(this.idMap.keys());
   }
@@ -121,8 +139,13 @@ export default class TreeController {
     return this.root?.maxTreeDepth ?? 0;
   }
   public findPath(id: string): Array<string> {
-    if (!this.hasRoot()) return [];
-    return this.root.findPath(id);
+    return this.root?.findPath(id) ?? [];
+  }
+  public findParentNode(id: string): TreeNode | undefined {
+    if (!this.idMap.has(id)) return undefined;
+    return this.toArray().find(
+      node => node.descendants.filter(child => child._ID === id).length > 0
+    );
   }
   public toArray(): Array<TreeNode> {
     return this.root?.toArray() ?? [];

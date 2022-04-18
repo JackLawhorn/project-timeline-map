@@ -1,4 +1,5 @@
 import React from 'react';
+import TextInput from '../input/TextInput';
 import NodeControls from './NodeControls';
 
 export default class NodeLabel extends React.Component {
@@ -8,12 +9,12 @@ export default class NodeLabel extends React.Component {
     const node = props.node;
     this.state = {
       node: node,
-      nodeID: node._ID,
-      nodeLabel: node.label,
 
       standaloneContext: props.standaloneContext,
       controls: props.controls,
     };
+
+    this.onChange = props.onChange;
   }
 
   componentDidMount() {}
@@ -22,8 +23,6 @@ export default class NodeLabel extends React.Component {
     const node = props.node;
     return {
       node: node,
-      nodeID: node._ID,
-      nodeLabel: node.label,
 
       standaloneContext: props.standaloneContext,
       controls: props.controls,
@@ -31,7 +30,8 @@ export default class NodeLabel extends React.Component {
   }
 
   render() {
-    const { node, standaloneContext, controls } = this.state;
+    const { node, standaloneContext, controls } = this.state,
+      onChange = this.onChange;
 
     return (
       <summary
@@ -42,8 +42,14 @@ export default class NodeLabel extends React.Component {
           <rect className='event-node' x='50%' y='50%' />
         </svg>
         <div className='node-label__title'>
-          <div className='node-label__type'>{`#${node.id}`}</div>
-          <div className='node-label__editor'>{node.label}</div>
+          <div className='node-label__type'>{`#${node?._ID}`}</div>
+          <TextInput
+            longInput={false}
+            initialValue={node?.label}
+            layout='single'
+            delay={2000}
+            onChange={onChange}
+          />
         </div>
         {controls && <NodeControls controls={controls} />}
       </summary>

@@ -3,14 +3,15 @@
 * Styling SVG elements
 *
 */
-:not(.glass-button) > svg:not(.node-label__controls) {
+svg.canvas,
+svg.canvas svg,
+.node-label > .node-label__icon {
   overflow: visible;
 
   &.canvas {
     display: block;
     width: 100%;
     height: -webkit-fill-available;
-    margin: 8tick 0;
     overflow: visible;
 
     -webkit-filter: drop-shadow(0 0 1tick var(--less-dark));

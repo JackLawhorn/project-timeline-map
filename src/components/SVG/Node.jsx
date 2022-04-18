@@ -15,7 +15,6 @@ export default class Node extends React.Component {
     this.handleSelect = props.handleSelect;
     this.handleHover = props.handleHover;
     this.handleDrag = props.handleDrag;
-    this.updateData = props.updateData;
   }
 
   componentDidMount() {}
@@ -43,7 +42,8 @@ export default class Node extends React.Component {
         onClick={() => {
           handleSelect(nodeID);
         }}
-        onMouseOver={() => {
+        onMouseEnter={() => {
+          if (spotlight) return;
           handleHover(nodeID);
         }}
         onMouseLeave={() => {

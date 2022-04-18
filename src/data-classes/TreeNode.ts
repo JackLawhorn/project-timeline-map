@@ -5,23 +5,17 @@ export default class TreeNode {
   public id: string = '';
 
   public label: string = 'Untitled';
+  public info: string = 'This is the description for node "Untitled".';
   public descendants: Array<TreeNode> = [];
 
   constructor(label: string, controller: TreeController) {
     this.label = label;
+    this.info = `This is the description for node "${label}".`;
 
     this.controller = controller;
     if (this.controller) this.id = this.controller.registerTreeNode(this);
   }
 
-  /**
-   * @public
-   * @return {TreeController} this TreeNode's TreeController
-   * @memberof TreeNode
-   */
-  public get _CONTROLLER(): TreeController {
-    return this.controller;
-  }
   /**
    * @public
    * @return {string} the ID of this TreeNode, unique to its TreeController
@@ -69,7 +63,7 @@ export default class TreeNode {
   }
 
   public findPath(id: string, prev: Array<string> = []): Array<string> {
-    const path = prev.concat([this.id]);
+    const path = [...prev, this.id];
     if (this.id === id) return path;
     if (!this.hasNext()) return [];
     const recur = this.descendants.map(node => node.findPath(id, path));
@@ -80,5 +74,10 @@ export default class TreeNode {
     let result: Array<TreeNode> = [this];
     if (this.hasNext()) result = result.concat(this.descendants.map(node => node.toArray()).flat());
     return result;
+  }
+
+  public updateNode(updatedProperties: any) {
+    Object.assign(this, updatedProperties);
+    return this;
   }
 }
