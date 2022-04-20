@@ -133,7 +133,7 @@ export default class TreeRenderer {
       const { x, y } = coords,
         { wx, hx } = scalars,
         { wt, ht } = translators;
-      const orientation = wx > hx,
+      const orientation = true, // wx > hx,
         maxTreeDepth = this._CTRL.maxTreeDepth();
 
       const scrollOffset = (scrollPosn / Math.max(1, maxTreeDepth)) * wx * 100;
@@ -164,7 +164,7 @@ export default class TreeRenderer {
       const { x, y } = coords,
         { wx, hx } = scalars,
         { wt, ht } = translators;
-      const orientation = wx > hx,
+      const orientation = true, // wx > hx,
         maxTreeDepth = this._CTRL.maxTreeDepth();
 
       const scrollOffset = (scrollPosn / Math.max(1, maxTreeDepth)) * wx * 100;

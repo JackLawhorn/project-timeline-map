@@ -40,7 +40,8 @@ export default class TreeMap extends React.Component {
       thisObj.setState({
         wx: clientWidth / 100,
         hx: clientHeight / 100,
-        orientation: clientWidth > clientHeight,
+        // orientation: clientWidth > clientHeight,
+        orientation: true,
       });
     });
     ro.observe(document.body);
@@ -59,7 +60,8 @@ export default class TreeMap extends React.Component {
 
       wx: (clientWidth ?? 100) / 100,
       hx: (clientHeight ?? 100) / 100,
-      orientation: (clientWidth ?? 100) > (clientHeight ?? 100),
+      // orientation: clientWidth > clientHeight,
+      orientation: true,
     };
   }
 
